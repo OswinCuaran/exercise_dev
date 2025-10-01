@@ -10,4 +10,4 @@ jobs:
       - name: Clonar el repositorio
         uses: actions/checkout@v3
 
-      - run: echo "Hola mundo"
+      - run: python3 main.py
