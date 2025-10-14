@@ -1,0 +1,31 @@
+name: build image
+on: 
+  push:
+    branches: [ web ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout del codigo
+        uses: actions/checkout@v5
+
+      - name: Login a GitHub packages
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN}}
+
+      - name: Construir y publicar la imagen docker
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_over}}/web_app:latest
