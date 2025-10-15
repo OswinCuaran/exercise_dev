@@ -1,5 +1,6 @@
 name: build image
-on: 
+
+on:
   push:
     branches: [ web ]
 
@@ -12,20 +13,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
 
-      - name: Checkout del codigo
-        uses: actions/checkout@v5
-
-      - name: Login a GitHub packages
-        uses: docker/login-action@v2
+      - name: Login a GitHub Packages
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN}}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 🔹 Convierte el nombre del repo a minúsculas
+      - name: Normalizar nombre del repo en minúsculas
+        run: echo "REPO_LC=$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Construir y publicar la imagen docker
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}/web_app:latest
+          tags: ghcr.io/${{ env.REPO_LC }}/web_app:latest
+
