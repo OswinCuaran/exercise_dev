@@ -1,3 +1,5 @@
+import requests
+
 def get_weather():
-    result = request.get("www.ambiente.com/api")
+    result = requests.get("www.ambiente.com/api")
     return result.json()["temperature"]
